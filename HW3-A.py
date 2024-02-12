@@ -1,17 +1,39 @@
+import math
+
+
 def is_symmetric(matrix):
+    """
+    Checks if a matrix is symmetric.
+
+    Parameters:
+        matrix (list of lists): The matrix to check.
+
+    Returns:
+        bool: True if the matrix is symmetric, False otherwise.
+    """
     n = len(matrix)
     for i in range(n):
-        for j in range(i+1, n):  # Loop only over upper triangular part
+        for j in range(i + 1, n):  # Loop only over upper triangular part
             if matrix[i][j] != matrix[j][i]:
                 return False
     return True
 
+
 def cholesky_decomposition(matrix):
+    """
+    Performs Cholesky decomposition on a symmetric positive-definite matrix.
+
+    Parameters:
+        matrix (list of lists): The matrix to decompose.
+
+    Returns:
+        list of lists: The lower triangular Cholesky factor.
+    """
     n = len(matrix)
     lower = [[0.0] * n for _ in range(n)]
 
     for i in range(n):
-        for j in range(i+1):
+        for j in range(i + 1):
             if i == j:
                 sum_val = sum(lower[i][k] ** 2 for k in range(j))
                 lower[i][j] = (matrix[i][i] - sum_val) ** 0.5
@@ -21,7 +43,18 @@ def cholesky_decomposition(matrix):
 
     return lower
 
+
 def doolittle_method(matrix, vector):
+    """
+    Solves a system of linear equations using the Doolittle method.
+
+    Parameters:
+        matrix (list of lists): The coefficient matrix of the system.
+        vector (list): The constants vector of the system.
+
+    Returns:
+        list: The solution vector.
+    """
     n = len(matrix)
     L = [[0.0] * n for _ in range(n)]
     U = [[0.0] * n for _ in range(n)]
@@ -32,7 +65,7 @@ def doolittle_method(matrix, vector):
             sum_val = sum(L[i][k] * U[k][j] for k in range(i))
             U[i][j] = matrix[i][j] - sum_val
 
-        for j in range(i+1, n):
+        for j in range(i + 1, n):
             sum_val = sum(L[j][k] * U[k][i] for k in range(i))
             L[j][i] = (matrix[j][i] - sum_val) / U[i][i]
 
@@ -47,11 +80,12 @@ def doolittle_method(matrix, vector):
     x = [0.0] * n
     for i in range(n - 1, -1, -1):
         x[i] = y[i]
-        for j in range(i+1, n):
+        for j in range(i + 1, n):
             x[i] -= U[i][j] * x[j]
         x[i] /= U[i][i]
 
     return x  # Return the solution
+
 
 # Define the matrix equations for the given problems
 problem1_matrix = [
